@@ -1,36 +1,60 @@
 'use client';
 
 import { useTransactions, useDeleteTransaction } from "@/hooks/useTransactions";
+import { useDebts } from "@/hooks/useDebts";
 import { useMemo, useState } from "react";
-import { ArrowUpRight, ArrowDownRight, DollarSign, Plus, Trash2 } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, DollarSign, Plus, Trash2, HandCoins } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import TransactionModal from "@/components/TransactionModal";
 
 export default function DashboardPage() {
-  const { data: transactions, isLoading } = useTransactions();
+  const { data: transactions, isLoading: isTxLoading } = useTransactions();
+  const { data: debts, isLoading: isDebtsLoading } = useDebts();
   const deleteMutation = useDeleteTransaction();
 
   const [filter, setFilter] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const stats = useMemo(() => {
-    if (!transactions) return { totalBalance: 0, totalIncome: 0, totalExpenses: 0 };
-    return transactions.reduce((acc, curr) => {
-      if (curr.type === 'INCOME') {
-        acc.totalIncome += Number(curr.amount);
-        acc.totalBalance += Number(curr.amount);
-      } else {
-        acc.totalExpenses += Number(curr.amount);
-        acc.totalBalance -= Number(curr.amount);
-      }
-      return acc;
-    }, { totalBalance: 0, totalIncome: 0, totalExpenses: 0 });
-  }, [transactions]);
+    let totalBalance = 0;
+    let totalIncome = 0;
+    let totalExpenses = 0;
+    let pendingLent = 0;
+    let pendingBorrowed = 0;
+
+    if (transactions) {
+      transactions.forEach((curr: any) => {
+        if (curr.type === 'INCOME') {
+          totalIncome += Number(curr.amount);
+          totalBalance += Number(curr.amount);
+        } else {
+          totalExpenses += Number(curr.amount);
+          totalBalance -= Number(curr.amount);
+        }
+      });
+    }
+
+    if (debts) {
+      debts.forEach((d: any) => {
+         if (d.status === 'PENDING') {
+            if (d.type === 'LENT') {
+               pendingLent += Number(d.amount);
+               totalBalance -= Number(d.amount); // Cash temporarily left your possession
+            } else if (d.type === 'BORROWED') {
+               pendingBorrowed += Number(d.amount);
+               totalBalance += Number(d.amount); // Cash temporarily entered your possession
+            }
+         }
+      });
+    }
+
+    return { totalBalance, totalIncome, totalExpenses, pendingLent, pendingBorrowed };
+  }, [transactions, debts]);
 
   const chartData = useMemo(() => {
     if (!transactions) return [];
     // Simple grouping by date
-    const grouped = transactions.reduce((acc: any, curr) => {
+    const grouped = transactions.reduce((acc: any, curr: any) => {
       const date = new Date(curr.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       if (!acc[date]) acc[date] = { date, income: 0, expense: 0 };
       if (curr.type === 'INCOME') acc[date].income += Number(curr.amount);
@@ -41,10 +65,12 @@ export default function DashboardPage() {
     return Object.values(grouped).reverse(); // Assuming original is ordered desc
   }, [transactions]);
 
-  const filteredTransactions = transactions?.filter(t => 
+  const filteredTransactions = transactions?.filter((t: any) => 
     t.description.toLowerCase().includes(filter.toLowerCase()) || 
     t.category.toLowerCase().includes(filter.toLowerCase())
   );
+
+  const isLoading = isTxLoading || isDebtsLoading;
 
   return (
     <div className="space-y-6">
@@ -58,7 +84,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl shadow-sm">
           <div className="flex items-center justify-between text-slate-500 mb-4">
-            <h3 className="font-medium">Total Balance</h3>
+            <h3 className="font-medium">Total Balance (Liquidity)</h3>
             <DollarSign size={20} className="text-blue-500" />
           </div>
           <div className="text-3xl font-bold">${stats.totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
@@ -79,6 +105,23 @@ export default function DashboardPage() {
           </div>
           <div className="text-3xl font-bold text-rose-500">-${stats.totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+         <div className="bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/30 p-6 rounded-xl shadow-sm flex items-center justify-between">
+            <div>
+               <div className="text-emerald-800 dark:text-emerald-400 font-medium mb-1">Pending Receivables (Lent)</div>
+               <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-500">${stats.pendingLent.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
+            </div>
+            <HandCoins size={32} className="text-emerald-200 dark:text-emerald-800" />
+         </div>
+         <div className="bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/30 p-6 rounded-xl shadow-sm flex items-center justify-between">
+            <div>
+               <div className="text-rose-800 dark:text-rose-400 font-medium mb-1">Pending Payables (Borrowed)</div>
+               <div className="text-2xl font-bold text-rose-600 dark:text-rose-500">${stats.pendingBorrowed.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
+            </div>
+            <HandCoins size={32} className="text-rose-200 dark:text-rose-800" />
+         </div>
       </div>
 
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm">
