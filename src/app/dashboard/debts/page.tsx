@@ -37,7 +37,7 @@ export default function DebtsPage() {
     updateDebt({ id, status: currentStatus === 'PENDING' ? 'SETTLED' : 'PENDING' });
   };
 
-  if (isLoading) return <div className="text-center py-20 text-slate-500">Loading debts...</div>;
+  if (isLoading) return <div className="text-center py-20 text-slate-500 dark:text-slate-400">Loading debts...</div>;
 
   const lentDebts = debts?.filter(d => d.type === 'LENT') || [];
   const borrowedDebts = debts?.filter(d => d.type === 'BORROWED') || [];
@@ -54,7 +54,7 @@ export default function DebtsPage() {
            </div>
            Debts & Loans
         </h1>
-        <button onClick={() => setIsModalOpen(true)} className="bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-200 dark:text-slate-900 px-4 py-2 rounded-md font-medium flex items-center gap-2 transition-colors">
+        <button onClick={() => setIsModalOpen(true)} className="bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-200 dark:text-slate-900 dark:text-slate-100 px-4 py-2 rounded-md font-medium flex items-center gap-2 transition-colors">
           <Plus size={18} /> Add Entry
         </button>
       </div>
@@ -62,11 +62,11 @@ export default function DebtsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/30 p-6 rounded-xl">
            <h3 className="text-emerald-800 dark:text-emerald-400 font-medium">To Receive</h3>
-           <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-500 mt-2">${totalOwedToMe.toFixed(2)}</p>
+           <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-500 mt-2">₹{totalOwedToMe.toFixed(2)}</p>
         </div>
         <div className="bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/30 p-6 rounded-xl">
            <h3 className="text-rose-800 dark:text-rose-400 font-medium">To Give</h3>
-           <p className="text-3xl font-bold text-rose-600 dark:text-rose-500 mt-2">${totalIOwe.toFixed(2)}</p>
+           <p className="text-3xl font-bold text-rose-600 dark:text-rose-500 mt-2">₹{totalIOwe.toFixed(2)}</p>
         </div>
       </div>
 
@@ -75,11 +75,11 @@ export default function DebtsPage() {
         <div>
           <h2 className="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800 pb-2">People who owe me</h2>
           <div className="space-y-3">
-             {lentDebts.length === 0 ? <p className="text-slate-500 text-sm">No recorded loans.</p> : lentDebts.map(debt => (
+             {lentDebts.length === 0 ? <p className="text-slate-500 dark:text-slate-400 text-sm">No recorded loans.</p> : lentDebts.map(debt => (
                <div key={debt.id} className={`p-4 rounded-xl border flex items-center justify-between transition-colors ${debt.status === 'SETTLED' ? 'bg-slate-50 border-slate-200 dark:bg-slate-900/50 dark:border-slate-800 opacity-60' : 'bg-white border-slate-200 dark:bg-slate-900 dark:border-slate-800'}`}>
                   <div>
-                    <h4 className={`font-medium ${debt.status === 'SETTLED' ? 'line-through text-slate-500' : ''}`}>{debt.person_name}</h4>
-                    <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">${Number(debt.amount).toFixed(2)}</p>
+                    <h4 className={`font-medium ${debt.status === 'SETTLED' ? 'line-through text-slate-500 dark:text-slate-400' : ''}`}>{debt.person_name}</h4>
+                    <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">₹{Number(debt.amount).toFixed(2)}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <button onClick={() => handleSettle(debt.id, debt.status)} title={debt.status === 'PENDING' ? 'Mark Settled' : 'Unsettle'} className={`p-2 rounded-full transition-colors ${debt.status === 'SETTLED' ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30' : 'bg-slate-100 hover:bg-emerald-100 hover:text-emerald-600 text-slate-400 dark:bg-slate-800'}`}>
@@ -98,11 +98,11 @@ export default function DebtsPage() {
         <div>
           <h2 className="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800 pb-2">People I owe</h2>
           <div className="space-y-3">
-             {borrowedDebts.length === 0 ? <p className="text-slate-500 text-sm">No recorded debts.</p> : borrowedDebts.map(debt => (
+             {borrowedDebts.length === 0 ? <p className="text-slate-500 dark:text-slate-400 text-sm">No recorded debts.</p> : borrowedDebts.map(debt => (
                <div key={debt.id} className={`p-4 rounded-xl border flex items-center justify-between transition-colors ${debt.status === 'SETTLED' ? 'bg-slate-50 border-slate-200 dark:bg-slate-900/50 dark:border-slate-800 opacity-60' : 'bg-white border-slate-200 dark:bg-slate-900 dark:border-slate-800'}`}>
                   <div>
-                    <h4 className={`font-medium ${debt.status === 'SETTLED' ? 'line-through text-slate-500' : ''}`}>{debt.person_name}</h4>
-                    <p className="text-sm font-semibold text-rose-600 dark:text-rose-400">${Number(debt.amount).toFixed(2)}</p>
+                    <h4 className={`font-medium ${debt.status === 'SETTLED' ? 'line-through text-slate-500 dark:text-slate-400' : ''}`}>{debt.person_name}</h4>
+                    <p className="text-sm font-semibold text-rose-600 dark:text-rose-400">₹{Number(debt.amount).toFixed(2)}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <button onClick={() => handleSettle(debt.id, debt.status)} title={debt.status === 'PENDING' ? 'Mark Settled' : 'Unsettle'} className={`p-2 rounded-full transition-colors ${debt.status === 'SETTLED' ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30' : 'bg-slate-100 hover:bg-emerald-100 hover:text-emerald-600 text-slate-400 dark:bg-slate-800'}`}>
@@ -144,7 +144,7 @@ export default function DebtsPage() {
                 <input required type="text" placeholder="e.g. John Doe" value={formData.person_name} onChange={(e) => setFormData({...formData, person_name: e.target.value})} className="w-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500" />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Amount ($)</label>
+                <label className="block text-sm font-medium mb-1">Amount (₹)</label>
                 <input required type="number" step="0.01" min="0" placeholder="0.00" value={formData.amount} onChange={(e) => setFormData({...formData, amount: e.target.value})} className="w-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500" />
               </div>
               

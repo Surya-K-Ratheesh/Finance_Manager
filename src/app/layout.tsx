@@ -19,6 +19,8 @@ export const metadata: Metadata = {
   description: "A professional tool to manage transactions and accounts.",
 };
 
+import { ThemeProvider } from "@/providers/ThemeProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,10 +30,13 @@ export default function RootLayout({
     <ClerkProvider>
       <html
         lang="en"
+        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       >
-        <body className="min-h-full flex flex-col bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
-          <ReactQueryProvider>{children}</ReactQueryProvider>
+        <body className="min-h-full flex flex-col bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-200">
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <ReactQueryProvider>{children}</ReactQueryProvider>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

@@ -53,7 +53,7 @@ export default function SpreadsheetPage() {
       
       const yyyy = selectedYear;
       const mm = String(selectedMonth + 1).padStart(2, '0');
-      const defaultDate = `${yyyy}-${mm}-01`;
+      const defaultDate = `${yyyy}-₹{mm}-01`;
       
       const fallbackDate = isCurrent ? currentDate.toISOString().split('T')[0] : defaultDate;
 
@@ -84,7 +84,7 @@ export default function SpreadsheetPage() {
 
   const addRow = () => {
     const isCurrent = selectedMonth === currentDate.getMonth() && selectedYear === currentDate.getFullYear();
-    const fallbackDate = isCurrent ? new Date().toISOString().split('T')[0] : `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}-01`;
+    const fallbackDate = isCurrent ? new Date().toISOString().split('T')[0] : `${selectedYear}-₹{String(selectedMonth + 1).padStart(2, '0')}-01`;
 
     setRows([...rows, {
       id: crypto.randomUUID(),
@@ -186,10 +186,10 @@ export default function SpreadsheetPage() {
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           {isLoading ? (
-             <div className="p-12 text-center text-slate-500">Loading your ledger...</div>
+             <div className="p-12 text-center text-slate-500 dark:text-slate-400">Loading your ledger...</div>
           ) : (
             <table className="w-full text-sm text-left">
-              <thead className="text-xs text-slate-500 uppercase bg-slate-50 dark:bg-slate-800/50">
+              <thead className="text-xs text-slate-500 dark:text-slate-400 uppercase bg-slate-50 dark:bg-slate-800/50">
                 <tr>
                   <th className="px-4 py-3 font-medium w-36">Date</th>
                   <th className="px-4 py-3 font-medium w-32">Type</th>
@@ -219,7 +219,7 @@ export default function SpreadsheetPage() {
                     </td>
                     <td className="p-1">
                       <div className="relative flex items-center">
-                         <span className="absolute left-2 text-slate-400">$</span>
+                         <span className="absolute left-2 text-slate-400">₹</span>
                          <input type="number" step="0.01" placeholder="0.00" value={row.amount} onChange={e => updateRow(row.id, 'amount', e.target.value)} className="w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-blue-500 dark:hover:border-slate-600 rounded pl-6 pr-2 py-1.5 outline-none transition-colors text-slate-700 dark:text-slate-300" />
                       </div>
                     </td>
@@ -232,7 +232,7 @@ export default function SpreadsheetPage() {
                 ))}
                 {rows.length === 0 && !isLoading && (
                   <tr>
-                    <td colSpan={6} className="text-center p-8 text-slate-500">
+                    <td colSpan={6} className="text-center p-8 text-slate-500 dark:text-slate-400">
                       No rows to display. Click "Row" to add entries.
                     </td>
                   </tr>
@@ -240,7 +240,7 @@ export default function SpreadsheetPage() {
               </tbody>
             </table>
           )}
-          <div className="p-4 border-t border-slate-100 dark:border-slate-800 text-slate-500 text-xs flex items-center justify-between bg-slate-50 dark:bg-slate-800/20">
+          <div className="p-4 border-t border-slate-100 dark:border-slate-800 text-slate-500 dark:text-slate-400 text-xs flex items-center justify-between bg-slate-50 dark:bg-slate-800/20">
              <span>Typing in a row makes it valid. Empty rows are silently ignored. Data is isolated to {MONTHS[selectedMonth]} {selectedYear}.</span>
              <span>{rows.length} Rows Rendered</span>
           </div>

@@ -6,6 +6,8 @@ import { LayoutDashboard, Wallet, Settings, Table, HandCoins, Menu, X } from "lu
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
 
+import { ThemeToggle } from '@/components/ThemeToggle';
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -28,9 +30,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   );
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden text-sm md:text-base">
       {/* Sidebar for Desktop */}
-      <aside className="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-200 hidden md:flex flex-col">
+      <aside className="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-200 hidden md:flex flex-col shrink-0">
         <div className="h-16 flex items-center px-6 border-b border-slate-200 dark:border-slate-800 font-bold tracking-tight text-xl">
           FinManager
         </div>
@@ -42,13 +44,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden bg-slate-50 dark:bg-slate-900 relative">
         <header className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex items-center justify-between px-4 md:px-6 shrink-0 relative z-10 w-full">
-          <div className="flex items-center gap-3 md:hidden">
-            <button onClick={() => setIsMobileMenuOpen(true)} className="p-2 -ml-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors">
+          <div className="flex items-center gap-2 md:hidden">
+            <button onClick={() => setIsMobileMenuOpen(true)} className="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors">
                <Menu size={24} />
             </button>
             <div className="font-bold text-lg">FinManager</div>
           </div>
-          <div className="ml-auto flex items-center gap-4">
+          <div className="ml-auto flex items-center gap-3 md:gap-5">
+            <ThemeToggle />
             <UserButton />
           </div>
         </header>
@@ -66,7 +69,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <div className="w-64 h-full bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 flex flex-col relative shadow-2xl animate-in slide-in-from-left duration-300">
                 <div className="h-16 flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800">
                   <span className="font-bold tracking-tight text-xl">FinManager</span>
-                  <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 -mr-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors">
+                  <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 -mr-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors">
                      <X size={20} />
                   </button>
                 </div>
