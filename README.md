@@ -4,7 +4,7 @@
 
   [![Next.js](https://img.shields.io/badge/Next.js-14+-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
   [![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
   [![Clerk](https://img.shields.io/badge/Clerk-6C47FF?style=for-the-badge&logo=clerk&logoColor=white)](https://clerk.dev/)
 </div>
@@ -13,31 +13,31 @@
 
 ## 📖 Overview
 
-**FinManager** is a beautifully designed, mobile-responsive web application that puts you in control of your personal finances. Built for speed and reliability using the latest web technologies, it features real-time data persistence, a gorgeous dark/light mode UI, interactive analytical charts, and dedicated bulk-data spreadsheet entry interfaces.
+**FinManager** is a rigorously designed, mobile-first web application that puts you in absolute control of your personal finances. Built for speed and reliability using the bleeding-edge Tailwind v4 engine, it features true global dark/light mode scaling, automated spreadsheet data entry, sophisticated debt tracking, and real-time algorithmic caching using TanStack React Query.
 
 ---
 
 ## ✨ Features
 
-- 📊 **Interactive Dashboard**: A visual summary of your total balance, income, and expenses mapped over dynamic `Recharts` area graphs.
-- 🗃️ **Transaction Ledger**: Search and filter your transactions quickly with designated categories, payment methods, and dates.
-- 📑 **Spreadsheet Bulk Entry**: A dedicated, interactive data grid letting you add dozens of rows at once—perfect for rapid ledger entry.
-- 🔒 **Secure Authentication**: End-to-end authentication flow backed by Clerk, securing your private financial records safely.
-- ⚡ **Optimistic Updates**: Highly responsive interactions thanks to TanStack React Query handling instantaneous UI mutations.
-- 📱 **Mobile First**: A meticulously crafted Tailwind CSS responsive layout that works flawlessly on devices of any screen size.
+- 📊 **Algorithmic Dashboard**: A visual summary of your core liquidity mapped over dynamic `Recharts` area graphs. The "Total Balance" dynamically adjusts in real-time if you temporarily lend or borrow capital!
+- 🤝 **Debts & Loans Ledger**: Fully isolated sub-application to natively track "People who owe me" vs "People I owe", directly bridging pending debts into your dashboard's net worth calculation.
+- 📑 **Chronological Spreadsheet**: A custom, interactive data-grid engineered with Supabase `.upsert()` capabilities. Features automatic Month/Year time-gating to safely handle dozens of transaction modifications safely.
+- 🌓 **Perfected Dual Aesthetics**: Utilizes `next-themes` and explicitly patched Tailwind V4 `@custom-variant` hooks to deliver an absolutely flawless Pitch Dark and Light mode experience natively synchronized with the user's toggle state.
+- 🔒 **Secure Authentication**: End-to-end authentication flow backed by Clerk v5, deeply locking database mutations strictly to active user sessions.
+- 📱 **Mobile First Navigation**: Re-engineered with responsive Tailwind React states, sporting a hidden Left-Drawer hamburger menu customized for smartphone viewports.
+- 🇮🇳 **Rupee (₹) Native**: Formatted strictly to the Indian Rupee currency standard with absolute precision.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Framework**: [Next.js](https://nextjs.org/) (App Router, Server Actions, API Routes)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) & [Lucide React](https://lucide.dev/) (Icons)
-- **Database**: [Supabase](https://supabase.com/) (PostgreSQL & Row Level Security)
-- **Authentication**: [Clerk](https://clerk.com/)
-- **State Management**: [TanStack Query](https://tanstack.com/query/latest) (React Query)
-- **Charts**: [Recharts](https://recharts.org/)
-- **Forms & Validation**: [React Hook Form](https://react-hook-form.com/) & [Zod](https://zod.dev/)
+- **Framework**: [Next.js](https://nextjs.org/) (App Router, Server Actions, Dynamic Layouts)
+- **Language**: [TypeScript](https://www.typescriptlang.org/) 
+- **Styling Pipeline**: [Tailwind CSS v4](https://tailwindcss.com/) & [next-themes](https://github.com/pacocoursey/next-themes)
+- **Database Architecture**: [Supabase](https://supabase.com/) (PostgreSQL & Aggressive RLS Policies)
+- **Authentication Wrapper**: [Clerk](https://clerk.com/)
+- **Caching & Mutations**: [TanStack Query](https://tanstack.com/query/latest) (React Query)
+- **Charts & Components**: [Recharts](https://recharts.org/), [Lucide React](https://lucide.dev/), and Radix UI Dialogs.
 
 ---
 
@@ -64,13 +64,13 @@ npm install
 
 1. Create a new project at [Supabase](https://supabase.com/).
 2. Navigate to the SQL Editor in your Supabase dashboard.
-3. Copy the contents of the `schema.sql` file provided in the repository root and run it to construct your required `transactions` table with corresponding Row Level Security policies.
-4. Retrieve your `Project URL`, your `public/anon key`, and your `service_role/secret key` from your configuration settings.
+3. Copy the entire contents of the `schema.sql` file provided in the repository root and execute it. This reconstructs BOTH the `transactions` and `debts` tables automatically with their corresponding Row Level Security constraints.
+4. Retrieve your `Project URL`, the `public/anon key`, and your **`service_role secret key`** *(crucial for edge bulk upserts!)*.
 
 ### 4. Setup Clerk (Authentication)
 
 1. Create a new project at [Clerk](https://clerk.com/).
-2. Select your preferred login methods (e.g. Email, Google).
+2. Select your preferred login methods.
 3. Retrieve your `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY`.
 
 ### 5. Configure Environment Variables
@@ -79,11 +79,11 @@ Create a `.env.local` file in the root directory of your project and populate it
 
 ```env
 # Clerk
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxx
-CLERK_SECRET_KEY=sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxx
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
 
 # Supabase
-NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxxxxxxxxxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=https://<your-project>.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbG...
 SUPABASE_SERVICE_ROLE_KEY=eyJhbG...
 ```
@@ -98,17 +98,9 @@ Open [http://localhost:3000](http://localhost:3000) in your browser. You will be
 
 ---
 
-## 🖼️ Screenshots
-> *Tip: Replace `/public/placeholder.png` with actual images of your application UI.*
-
-![Dashboard](https://via.placeholder.com/1200x600/0f172a/ffffff?text=Dashboard+Screenshot)
-*The main FinManager analytical dashboard detailing cash flow.*
-
----
-
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/your-username/finmanager/issues).
+Contributions, issues, and feature requests are heartily welcome! Feel free to check the issues page.
 
 ## 📝 License
 
