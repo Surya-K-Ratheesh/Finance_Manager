@@ -43,4 +43,36 @@ CREATE POLICY "Users can only delete their own transactions"
   ON public.transactions FOR DELETE
   USING (auth.uid()::text = user_id OR current_setting('request.jwt.claims', true)::json->>'sub' = user_id);
 
+-- DEBTS (Lending & Borrowing) TABLE
+CREATE TABLE public.debts (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    person_name TEXT NOT NULL,
+    amount NUMERIC(12, 2) NOT NULL,
+    type TEXT CHECK (type IN ('LENT', 'BORROWED')) NOT NULL,
+    status TEXT CHECK (status IN ('PENDING', 'SETTLED')) DEFAULT 'PENDING' NOT NULL,
+    due_date DATE,
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+ALTER TABLE public.debts ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can only view their own debts"
+  ON public.debts FOR SELECT
+  USING (auth.uid()::text = user_id OR current_setting('request.jwt.claims', true)::json->>'sub' = user_id);
+
+CREATE POLICY "Users can only insert their own debts"
+  ON public.debts FOR INSERT
+  WITH CHECK (auth.uid()::text = user_id OR current_setting('request.jwt.claims', true)::json->>'sub' = user_id);
+
+CREATE POLICY "Users can only update their own debts"
+  ON public.debts FOR UPDATE
+  USING (auth.uid()::text = user_id OR current_setting('request.jwt.claims', true)::json->>'sub' = user_id)
+  WITH CHECK (auth.uid()::text = user_id OR current_setting('request.jwt.claims', true)::json->>'sub' = user_id);
+
+CREATE POLICY "Users can only delete their own debts"
+  ON public.debts FOR DELETE
+  USING (auth.uid()::text = user_id OR current_setting('request.jwt.claims', true)::json->>'sub' = user_id);
+
 -- If you only fetch via server actions with Service Role Key, RLS policies won't block it.

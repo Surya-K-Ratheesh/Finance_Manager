@@ -1,5 +1,5 @@
 import { UserButton } from "@clerk/nextjs";
-import { LayoutDashboard, Wallet, Settings, Table } from "lucide-react";
+import { LayoutDashboard, Wallet, Settings, Table, HandCoins } from "lucide-react";
 import Link from "next/link";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -16,6 +16,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </Link>
           <Link href="/dashboard/spreadsheet" className="flex items-center gap-3 px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md font-medium text-slate-600 dark:text-slate-400">
             <Table size={20} /> Spreadsheet
+          </Link>
+          <Link href="/dashboard/debts" className="flex items-center gap-3 px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md font-medium text-slate-600 dark:text-slate-400">
+            <HandCoins size={20} /> Debts
           </Link>
           <Link href="/dashboard/accounts" className="flex items-center gap-3 px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md font-medium text-slate-600 dark:text-slate-400">
             <Wallet size={20} /> Accounts
