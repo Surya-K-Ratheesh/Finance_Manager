@@ -39,16 +39,19 @@ export async function POST(req: Request) {
   const body = await req.json();
   const rows = Array.isArray(body) ? body : [body];
 
-  const payload = rows.map((row) => ({
-    id: row.id,
-    user_id: userId,
-    description: row.description,
-    amount: row.amount,
-    type: row.type,
-    category: row.category,
-    payment_method: row.payment_method,
-    date: row.date,
-  }));
+  const payload = rows.map((row) => {
+    const entry: any = {
+      user_id: userId,
+      description: row.description,
+      amount: row.amount,
+      type: row.type,
+      category: row.category,
+      payment_method: row.payment_method,
+      date: row.date,
+    };
+    if (row.id) entry.id = row.id;
+    return entry;
+  });
 
   const { data, error } = await supabase
     .from("transactions")
