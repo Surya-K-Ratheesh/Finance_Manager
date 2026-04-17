@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createClient } from "@supabase/supabase-js";
 
+export const dynamic = 'force-dynamic';
+
 // We instantiate Supabase inside the handler to ensure it can be dynamic.
 // We use the SERVICE ROLE key to bypass RLS because we strictly authorize via Clerk's userId in this secure backend context.
 const supabase = createClient(

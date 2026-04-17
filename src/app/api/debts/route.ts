@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createClient } from "@supabase/supabase-js";
 
+export const dynamic = 'force-dynamic';
+
 // We use the SERVICE ROLE key to bypass RLS because we strictly authorize via Clerk's userId in this secure backend context.
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
@@ -39,6 +41,7 @@ export async function POST(req: Request) {
       due_date: row.due_date || null,
       notes: row.notes || '',
     };
+    if (row.created_at) entry.created_at = row.created_at;
     if (row.id) entry.id = row.id;
     return entry;
   });
